@@ -23,7 +23,7 @@ const ClockContextProvider = (props) => {
       clock_type: mode.SESSION
     })
 
-  function convert_time(time, mins_only = false) {
+  function convertTime(time, mins_only = false) {
     // return a string of mm:ss
     let minutes = Math.floor(time / 60000);
     let seconds = Math.floor((time % 60000) / 1000);
@@ -35,7 +35,7 @@ const ClockContextProvider = (props) => {
   }
 
   return (
-    <ClockContext.Provider value={{ session_start, session_end, time_remaining, clock_status, clock_type, session_length, break_length, convert_time, dispatch }}>
+    <ClockContext.Provider value={{ session_start, session_end, time_remaining, clock_status, clock_type, session_length, break_length, convertTime, dispatch }}>
       {props.children}
     </ClockContext.Provider>
   );
