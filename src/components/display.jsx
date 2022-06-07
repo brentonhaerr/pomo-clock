@@ -18,6 +18,7 @@ const Display = () => {
     console.log("Tick");
     if (time_remaining <= 0) {
       console.log("Clock finished! Time drift: " + (Date.now() - session_end));
+      document.getElementById("audio").play();
     } else {
       dispatch({ type: act.SET_TIME_REMAINING, value: (session_end - Date.now()) })
     }
@@ -41,6 +42,7 @@ const Display = () => {
       <p id="time-left">{time_remaining >= 0 ? convertTime(time_remaining) : convertTime(0)}</p>
       <button onClick={_play_button}>Play/Pause</button>
       <button>Reset</button>
+      <audio id="audio" src="https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav" autoplay="false" ></audio>
     </div>
   );
 }
