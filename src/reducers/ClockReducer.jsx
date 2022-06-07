@@ -20,7 +20,8 @@ export const ClockReducer = (state, action) => {
 
 function _start(state) {
   console.log("REDUCER: _start");
-  return { ...state, clock_status: status.RUNNING, session_end: (Date.now() + state.session_length) }
+  // Reset default tick_rate
+  return { ...state, clock_status: status.RUNNING, session_end: (Date.now() + state.session_length), tick_rate: 250 }
 }
 
 function _pause(state) {
@@ -39,5 +40,12 @@ function _reset(state) {
 }
 
 function _set_time_remaining(state, action) {
-  return { ...state, time_remaining: action.value }
+
+  // Limit the tick rate for the final tick to true up any drift.
+  let tick = 250;
+  if (action.value < state.tick_rate) {
+    tick = action.value;
+  }
+
+  return { ...state, time_remaining: action.value, tick_rate: tick }
 }

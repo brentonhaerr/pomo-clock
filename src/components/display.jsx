@@ -4,20 +4,23 @@ import * as status from '../constants/clock_status';
 import * as act from '../constants/actions';
 
 const Display = () => {
-  const { session_end, clock_status, time_remaining, convertTime, dispatch } = useContext(ClockContext);
+  const { session_end, clock_status, time_remaining, convertTime, tick_rate, dispatch } = useContext(ClockContext);
 
   useEffect(() => {
-    let _tick_rate = 500;
     setTimeout(() => {
       if (clock_status === status.RUNNING) {
         _tick_clock();
       }
-    }, _tick_rate);
+    }, tick_rate);
   })
 
   function _tick_clock() {
     console.log("Tick");
-    dispatch({ type: act.SET_TIME_REMAINING, value: (session_end - Date.now() )})
+    if (time_remaining <= 0) {
+      console.log("Clock finished! Time drift: " + (Date.now() - session_end));
+    } else {
+      dispatch({ type: act.SET_TIME_REMAINING, value: (session_end - Date.now()) })
+    }
   }
 
 
@@ -35,7 +38,7 @@ const Display = () => {
     <div>
       <h1>Display</h1>
       <p>Session</p>
-      <p id="time-left">{convertTime(time_remaining)}</p>
+      <p id="time-left">{time_remaining >= 0 ? convertTime(time_remaining) : convertTime(0)}</p>
       <button onClick={_play_button}>Play/Pause</button>
       <button>Reset</button>
     </div>

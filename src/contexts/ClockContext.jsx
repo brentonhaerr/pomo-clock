@@ -14,13 +14,15 @@ const ClockContextProvider = (props) => {
       clock_status,
       clock_type,
       session_length,
-      break_length
+      break_length,
+      tick_rate
     },
     dispatch] = useReducer(ClockReducer, {
-      session_length: (25 * 60 * 1000),
+      session_length: (1 * 60 * 1000),
       break_length: (5 * 60 * 1000),
       clock_status: stat.STOPPED,
-      clock_type: mode.SESSION
+      clock_type: mode.SESSION,
+      tick_rate: 250
     })
 
   function convertTime(time, mins_only = false) {
@@ -35,7 +37,7 @@ const ClockContextProvider = (props) => {
   }
 
   return (
-    <ClockContext.Provider value={{ session_start, session_end, time_remaining, clock_status, clock_type, session_length, break_length, convertTime, dispatch }}>
+    <ClockContext.Provider value={{ session_start, session_end, time_remaining, clock_status, clock_type, session_length, break_length, tick_rate, convertTime, dispatch }}>
       {props.children}
     </ClockContext.Provider>
   );
