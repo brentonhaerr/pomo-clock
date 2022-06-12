@@ -1,10 +1,11 @@
 import * as act from '../constants/actions';
 import * as status from '../constants/clock_status';
+import * as mode from '../constants/clock_modes';
 
 export const ClockReducer = (state, action) => {
   switch (action.type) {
     case act.START_CLOCK:
-      return _start(state);
+      return _start_session(state);
     case act.PAUSE_CLOCK:
       return _pause(state);
     case act.RESET_CLOCK:
@@ -13,15 +14,23 @@ export const ClockReducer = (state, action) => {
       return _resume(state);
     case act.SET_TIME_REMAINING:
       return _set_time_remaining(state, action);
+    case act.SWITCH_MODE:
+      return _switch_mode(state);
     default:
       return state;
   }
 }
 
-function _start(state) {
-  console.log("REDUCER: _start");
+function _start_session(state) {
+  console.log("REDUCER: _start_session");
   // Reset default tick_rate
-  return { ...state, clock_status: status.RUNNING, session_end: (Date.now() + state.session_length), tick_rate: 250 }
+  return { ...state, clock_status: status.RUNNING, clock_mode: mode.SESSION, session_end: (Date.now() + state.session_length), time_remaining: state.session_length, tick_rate: 250 }
+}
+
+function _start_break(state) {
+  console.log("REDUCER: _start_break");
+  // Reset default tick_rate
+  return { ...state, clock_status: status.RUNNING, clock_mode: mode.BREAK, time_remaining: state.break_length, session_end: (Date.now() + state.break_length), tick_rate: 250 }
 }
 
 function _pause(state) {
@@ -36,7 +45,19 @@ function _resume(state) {
 
 function _reset(state) {
   console.log("REDUCER: _reset");
-  return { ...state }
+  return { ...state, clock_status: status.STOPPED, clock_mode: mode.SESSION, session_length: (25*60*1000), break_length: (5*60*1000), tick_rate: 250, time_remaining: (25*60*1000) }
+}
+
+function _switch_mode(state) {
+  switch (state.clock_mode) {
+    case mode.SESSION:
+      return _start_break(state);
+    case mode.BREAK:
+      return _start_session(state);
+    default:
+      console.log("_switch_mode received unexpected input");
+      return state;
+  }
 }
 
 function _set_time_remaining(state, action) {

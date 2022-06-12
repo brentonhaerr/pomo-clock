@@ -2,9 +2,10 @@ import React, { useContext, useEffect } from 'react';
 import { ClockContext } from '../contexts/ClockContext';
 import * as status from '../constants/clock_status';
 import * as act from '../constants/actions';
+import * as mode from '../constants/clock_modes';
 
 const Display = () => {
-  const { session_end, clock_status, time_remaining, convertTime, tick_rate, dispatch } = useContext(ClockContext);
+  const { session_end, clock_status, time_remaining, clock_mode, convertTime, tick_rate, dispatch } = useContext(ClockContext);
 
   useEffect(() => {
     setTimeout(() => {
@@ -17,10 +18,31 @@ const Display = () => {
   function _tick_clock() {
     console.log("Tick");
     if (time_remaining <= 0) {
-      console.log("Clock finished! Time drift: " + (Date.now() - session_end));
-      document.getElementById("audio").play();
+      _ring_alarm();
+      _clock_switchover();
+      // Start playing break or session if this is a break
     } else {
       dispatch({ type: act.SET_TIME_REMAINING, value: (session_end - Date.now()) })
+    }
+  }
+
+  function _ring_alarm() {
+    document.getElementById("audio").play();
+  }
+
+  function _clock_switchover() {
+    dispatch({ type: act.SWITCH_MODE });
+    switch (clock_mode) {
+      // switch to opposite text than current version
+      case mode.BREAK:
+        document.getElementById("timer-label").innerHTML = "SESSION";
+        break;
+      case mode.SESSION:
+        document.getElementById("timer-label").innerHTML = "BREAK";
+        break;
+      default:
+        console.log("Unexpected value in _clock_switchover");
+        break;
     }
   }
 
@@ -35,14 +57,18 @@ const Display = () => {
     }
   }
 
+  function _reset_button() {
+    dispatch({ type: act.RESET_CLOCK })
+  }
+
   return (
     <div>
       <h1>Display</h1>
-      <p>Session</p>
+      <p id='timer-label'>Session</p>
       <p id="time-left">{time_remaining >= 0 ? convertTime(time_remaining) : convertTime(0)}</p>
       <button onClick={_play_button}>Play/Pause</button>
-      <button>Reset</button>
-      <audio id="audio" src="https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav" autoplay="false" ></audio>
+      <button onClick={_reset_button}>Reset</button>
+      <audio id="audio" src="https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav" autoPlay={false} ></audio>
     </div>
   );
 }
