@@ -20,7 +20,6 @@ const Display = () => {
     if (time_remaining <= 0) {
       _ring_alarm();
       _clock_switchover();
-      // Start playing break or session if this is a break
     } else {
       dispatch({ type: act.SET_TIME_REMAINING, value: (session_end - Date.now()) })
     }
@@ -32,18 +31,6 @@ const Display = () => {
 
   function _clock_switchover() {
     dispatch({ type: act.SWITCH_MODE });
-    switch (clock_mode) {
-      // switch to opposite text than current version
-      case mode.BREAK:
-        document.getElementById("timer-label").innerHTML = "SESSION";
-        break;
-      case mode.SESSION:
-        document.getElementById("timer-label").innerHTML = "BREAK";
-        break;
-      default:
-        console.log("Unexpected value in _clock_switchover");
-        break;
-    }
   }
 
 
@@ -64,7 +51,7 @@ const Display = () => {
   return (
     <div>
       <h1>Display</h1>
-      <p id='timer-label'>Session</p>
+      <p id='timer-label'>{clock_mode === mode.SESSION ? "Session" : "Break"}</p>
       <p id="time-left">{time_remaining >= 0 ? convertTime(time_remaining) : convertTime(0)}</p>
       <button onClick={_play_button}>Play/Pause</button>
       <button onClick={_reset_button}>Reset</button>
