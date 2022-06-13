@@ -16,6 +16,9 @@ export const ClockReducer = (state, action) => {
       return _set_time_remaining(state, action);
     case act.SWITCH_MODE:
       return _switch_mode(state);
+    case act.ADJUST_TIMER:
+      // action must have timer: and direction:
+      return _adjust_timer(state, action);
     default:
       return state;
   }
@@ -46,6 +49,28 @@ function _resume(state) {
 function _reset(state) {
   console.log("REDUCER: _reset");
   return { ...state, clock_status: status.STOPPED, clock_mode: mode.SESSION, session_length: (25*60*1000), break_length: (5*60*1000), tick_rate: 250, time_remaining: (25*60*1000) }
+}
+
+function _adjust_timer(state, action) {
+  if (state.clock_status !== status.STOPPED) {
+    console.log("Cannot adjust timers while clock is running.");
+    return state;
+  }
+  let value_change = (action.direction === 'up' ? 1 : -1);
+  let new_length;
+  switch (action.timer) {
+    case "session":
+      new_length = state.session_length + (value_change*60*1000);
+      if (new_length < 1) { new_length = (1*60*1000) };
+      return { ...state, session_length: new_length };
+    case "break":
+      new_length = state.break_length + (value_change*60*1000);
+      if (new_length < 1) { new_length = (1*60*1000) };
+      return { ...state, break_length: new_length };
+    default:
+      console.log("Unexpected value in _adjust_timer");
+      return state;
+  }
 }
 
 function _switch_mode(state) {
