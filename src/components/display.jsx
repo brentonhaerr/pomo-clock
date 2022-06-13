@@ -5,7 +5,7 @@ import * as act from '../constants/actions';
 import * as mode from '../constants/clock_modes';
 
 const Display = () => {
-  const { session_end, clock_status, time_remaining, clock_mode, convertTime, tick_rate, dispatch } = useContext(ClockContext);
+  const { session_end, session_length, clock_status, time_remaining, clock_mode, convertTime, tick_rate, dispatch } = useContext(ClockContext);
 
   useEffect(() => {
     setTimeout(() => {
@@ -16,7 +16,6 @@ const Display = () => {
   })
 
   function _tick_clock() {
-    console.log("Tick");
     if (time_remaining <= 0) {
       _ring_alarm();
       _clock_switchover();
@@ -55,11 +54,19 @@ const Display = () => {
     dispatch({ type: act.RESET_CLOCK })
   }
 
+  function _display_value() {
+    if (clock_status !== status.STOPPED) {
+      return time_remaining >= 0 ? convertTime(time_remaining) : convertTime(0);
+    } else {
+      return convertTime(session_length);
+    }
+  }
+
   return (
     <div>
       <h1>Display</h1>
       <p id='timer-label'>{clock_mode === mode.SESSION ? "Session" : "Break"}</p>
-      <p id="time-left">{time_remaining >= 0 ? convertTime(time_remaining) : convertTime(0)}</p>
+      <p id="time-left">{_display_value()}</p>
       <button onClick={_play_button}>Play/Pause</button>
       <button onClick={_reset_button}>Reset</button>
       <audio id="audio" src="https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav" autoPlay={false} ></audio>
