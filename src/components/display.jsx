@@ -35,12 +35,19 @@ const Display = () => {
 
 
   function _play_button() {
-    if (clock_status === status.RUNNING) {
-      dispatch({ type: act.PAUSE_CLOCK });
-    } else if (clock_status === status.STOPPED) {
-      dispatch({ type: act.START_CLOCK })
-    } else if (clock_status === status.PAUSED) {
-      dispatch({ type: act.RESUME_CLOCK })
+    switch (clock_status) {
+      case status.RUNNING:
+        dispatch({ type: act.PAUSE_CLOCK });
+        break;
+      case status.STOPPED:
+        dispatch({ type: act.START_CLOCK })
+        break;
+      case status.PAUSED:
+        dispatch({ type: act.RESUME_CLOCK })
+        break;
+      default:
+        console.log("Unexpected value in _play_button");
+        break;
     }
   }
 
