@@ -18,8 +18,8 @@ const ClockContextProvider = (props) => {
       tick_rate
     },
     dispatch] = useReducer(ClockReducer, {
-      session_length: (3 * 60 * 1000),
-      break_length: (1 * 60 * 1000),
+      session_length: (25 * 60 * 1000),
+      break_length: (5 * 60 * 1000),
       clock_status: stat.STOPPED,
       clock_mode: mode.SESSION,
       tick_rate: 250, 

@@ -67,9 +67,9 @@ const Display = () => {
       <h1>Display</h1>
       <p id='timer-label'>{clock_mode === mode.SESSION ? "Session" : "Break"}</p>
       <p id="time-left">{_display_value()}</p>
-      <button onClick={_play_button}>Play/Pause</button>
-      <button onClick={_reset_button}>Reset</button>
-      <audio id="audio" src="https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav" autoPlay={false} ></audio>
+      <button id="start_stop" onClick={_play_button}>Play/Pause</button>
+      <button id="reset" onClick={_reset_button}>Reset</button>
+      <audio id="beep" src="https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav" autoPlay={false} ></audio>
     </div>
   );
 }

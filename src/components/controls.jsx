@@ -15,14 +15,16 @@ const Controls = () => {
   return (
     <section id="controls">
       <div className="box">
-        <button onClick={ ()=>{_timer_change(true, true)} }>Up</button>
-        Session Length: {convertTime(session_length, true)}
-        <button onClick={ ()=>{_timer_change(true, false)} }>Down</button>
+        <button id="session-increment" onClick={() => { _timer_change(true, true) }}>Up</button>
+        <span id="session-label"> Session Length: </span>
+        <span id="session-length">{convertTime(session_length, true)}</span>
+        <button id="session-decrement" onClick={() => { _timer_change(true, false) }}>Down</button>
       </div>
       <div className="box">
-        <button onClick={ ()=>{_timer_change(false, true)} }>Up</button>
-        Break Length: {convertTime(break_length, true)}
-        <button onClick={ ()=>{_timer_change(false, false)} }>Down</button>
+        <button id="break-increment" onClick={() => { _timer_change(false, true) }}>Up</button>
+        <span id="break-label">Break Length: </span>
+        <span id="break-length">{convertTime(break_length, true)}</span>
+        <button id="break-decrement" onClick={() => { _timer_change(false, false) }}>Down</button>
       </div>
     </section>
   );
