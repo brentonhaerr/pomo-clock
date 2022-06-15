@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { ClockContext } from '../contexts/ClockContext';
 import * as status from '../constants/clock_status';
 import * as act from '../constants/actions';
@@ -6,6 +6,8 @@ import * as mode from '../constants/clock_modes';
 
 const Display = () => {
   const { session_end, session_length, clock_status, time_remaining, clock_mode, convertTime, tick_rate, dispatch } = useContext(ClockContext);
+
+  const audio_element = useRef(null);
 
   useEffect(() => {
     setTimeout(() => {
@@ -25,7 +27,8 @@ const Display = () => {
   }
 
   function _ring_alarm() {
-    document.getElementById("beep").play();
+    //document.getElementById("beep").play();
+    audio_element.current.play();
   }
 
   function _clock_switchover() {
@@ -50,8 +53,16 @@ const Display = () => {
     }
   }
 
+  Audio.prototype.stop = function() {
+    // Add stop function to Audio class to allow for quick-stopping alarm sound
+    // when using the reset button.
+    this.pause();
+    this.currentTime = 0;
+  }
+
   function _reset_button() {
     dispatch({ type: act.RESET_CLOCK })
+    audio_element.current.stop();
   }
 
   function _display_value() {
@@ -69,7 +80,7 @@ const Display = () => {
       <p id="time-left">{_display_value()}</p>
       <button id="start_stop" onClick={_play_button}>Play/Pause</button>
       <button id="reset" onClick={_reset_button}>Reset</button>
-      <audio id="beep" src="https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav" autoPlay={false} ></audio>
+      <audio id="beep" ref={audio_element} src="https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav" autoPlay={false} ></audio>
     </div>
   );
 }

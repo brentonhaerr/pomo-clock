@@ -62,10 +62,12 @@ function _adjust_timer(state, action) {
     case "session":
       new_length = state.session_length + (value_change*60*1000);
       if (new_length < 1) { new_length = (1*60*1000) };
+      if (new_length > (60*60*1000)) { new_length = (60*60*1000) };
       return { ...state, session_length: new_length };
     case "break":
       new_length = state.break_length + (value_change*60*1000);
       if (new_length < 1) { new_length = (1*60*1000) };
+      if (new_length > (60*60*1000)) { new_length = (60*60*1000) };
       return { ...state, break_length: new_length };
     default:
       console.log("Unexpected value in _adjust_timer");
