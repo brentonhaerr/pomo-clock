@@ -25,7 +25,7 @@ const Display = () => {
   }
 
   function _ring_alarm() {
-    document.getElementById("audio").play();
+    document.getElementById("beep").play();
   }
 
   function _clock_switchover() {
@@ -58,7 +58,7 @@ const Display = () => {
     if (clock_status !== status.STOPPED) {
       return time_remaining >= 0 ? convertTime(time_remaining) : convertTime(0);
     } else {
-      return convertTime(session_length);
+      return convertTime(session_length, false, false);
     }
   }
 

@@ -26,11 +26,13 @@ const ClockContextProvider = (props) => {
       time_remaining: (3*60*1000)
     })
 
-  function convertTime(time, mins_only = false) {
+  function convertTime(time, mins_only, for_controls = false) {
     // return a string of mm:ss
     let minutes = Math.floor(time / 60000);
     let seconds = Math.floor((time % 60000) / 1000);
     if (seconds < 10) { seconds = "0" + seconds };
+    // don't add the 0 to minutes when they go in the controls component
+    if (minutes < 10 && !for_controls) { minutes = "0" + minutes };
     if (mins_only) {
       return minutes;
     }
