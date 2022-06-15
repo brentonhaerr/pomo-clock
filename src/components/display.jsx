@@ -18,17 +18,16 @@ const Display = () => {
   })
 
   function _tick_clock() {
+    if (time_remaining < 1000 && audio_element.current.paused) {
+      // Start playing the alarm sound when we hit 00:00 and if the audio is 
+      // NOT playing.
+      audio_element.current.play();
+    }
     if (time_remaining <= 0) {
-      _ring_alarm();
       _clock_switchover();
     } else {
       dispatch({ type: act.SET_TIME_REMAINING, value: (session_end - Date.now()) })
     }
-  }
-
-  function _ring_alarm() {
-    //document.getElementById("beep").play();
-    audio_element.current.play();
   }
 
   function _clock_switchover() {
@@ -53,7 +52,7 @@ const Display = () => {
     }
   }
 
-  Audio.prototype.stop = function() {
+  Audio.prototype.stop = function () {
     // Add stop function to Audio class to allow for quick-stopping alarm sound
     // when using the reset button.
     this.pause();
